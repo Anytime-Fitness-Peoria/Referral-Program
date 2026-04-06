@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Member Referral Rewards Program</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --surface2: #1a1a1a;
+    --border: #222222;
+    --gold: #c9a84c;
+    --gold-light: #f0cc6e;
+    --gold-dim: #7a5e20;
+    --white: #f5f5f0;
+    --gray: #888;
+    --green: #4caf7d;
+    --red: #e05252;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background texture */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse at 20% 20%, rgba(201,168,76,0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(201,168,76,0.04) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* HEADER */
+  header {
+    padding: 48px 0 32px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .logo-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface);
+    border: 1px solid var(--gold-dim);
+    padding: 6px 14px;
+    border-radius: 2px;
+    margin-bottom: 14px;
+  }
+
+  .logo-badge span {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .logo-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 8vw, 80px);
+    letter-spacing: 0.04em;
+    line-height: 0.9;
+    color: var(--white);
+  }
+
+  h1 em {
+    color: var(--gold);
+    font-style: normal;
+  }
+
+  .header-tagline {
+    color: var(--gray);
+    font-size: 15px;
+    font-weight: 300;
+    max-width: 300px;
+    line-height: 1.5;
+    text-align: right;
+  }
+
+  /* TABS */
+  .tabs {
+    display: flex;
+    gap: 2px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 4px;
+    margin-bottom: 40px;
+    width: fit-content;
+  }
+
+  .tab {
+    padding: 10px 24px;
+    border: none;
+    background: transparent;
+    color: var(--gray);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.2s;
+    letter-spacing: 0.02em;
+  }
+
+  .tab.active {
+    background: var(--gold);
+    color: #0a0a0a;
+  }
+
+  /* PANELS */
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* ── OVERVIEW PANEL ── */
+  .overview-hero {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 40px;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .overview-hero::after {
+    content: 'REFER';
+    position: absolute;
+    right: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 160px;
+    color: rgba(201,168,76,0.04);
+    line-height: 1;
+    pointer-events: none;
+    letter-spacing: 0.05em;
+  }
+
+  .overview-hero h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    letter-spacing: 0.06em;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+
+  .overview-hero p {
+    color: var(--gray);
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 1.6;
+    max-width: 520px;
+  }
+
+  .reward-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+
+  .reward-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 28px;
+    position: relative;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .reward-card:hover {
+    border-color: var(--gold-dim);
+    transform: translateY(-2px);
+  }
+
+  .reward-card.highlight {
+    border-color: var(--gold-dim);
+    background: linear-gradient(135deg, var(--surface) 0%, rgba(201,168,76,0.05) 100%);
+  }
+
+  .reward-pts {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .reward-pts span {
+    font-size: 20px;
+    color: var(--gold-dim);
+  }
+
+  .reward-label {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+
+  .reward-desc {
+    font-size: 13px;
+    color: var(--gray);
+    line-height: 1.5;
+    font-weight: 300;
+  }
+
+  .reward-badge {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: var(--gold);
+    color: #0a0a0a;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    padding: 3px 8px;
+    border-radius: 2px;
+  }
+
+  /* Drawing prizes */
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    letter-spacing: 0.08em;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+
+  .section-sub {
+    font-size: 13px;
+    color: var(--gray);
+    margin-bottom: 20px;
+    font-weight: 300;
+  }
+
+  .drawing-note {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    padding: 16px 20px;
+    border-radius: 0 4px 4px 0;
+    margin-bottom: 32px;
+    font-size: 14px;
+    color: var(--gray);
+    line-height: 1.6;
+  }
+
+  .drawing-note strong {
+    color: var(--white);
+    font-weight: 600;
+  }
+
+  .prize-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+  }
+
+  .prize-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    transition: border-color 0.2s;
+  }
+
+  .prize-item:hover { border-color: var(--gold-dim); }
+
+  .prize-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--surface2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .prize-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--white);
+  }
+
+  .prize-val {
+    font-size: 12px;
+    color: var(--gold);
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* ── TRACKER PANEL ── */
+  .tracker-layout {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 24px;
+  }
+
+  @media (max-width: 720px) {
+    .tracker-layout { grid-template-columns: 1fr; }
+  }
+
+  .tracker-main {}
+
+  .member-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 32px;
+    margin-bottom: 24px;
+  }
+
+  .member-card label {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 8px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .member-input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 12px 16px;
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.2s;
+    margin-bottom: 16px;
+  }
+
+  .member-input:focus { border-color: var(--gold); }
+
+  .add-referral-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--gold);
+    color: #0a0a0a;
+    border: none;
+    border-radius: 3px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+  }
+
+  .add-referral-btn:hover { background: var(--gold-light); }
+  .add-referral-btn:active { transform: scale(0.99); }
+
+  /* Progress bar */
+  .progress-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 28px;
+    margin-bottom: 24px;
+  }
+
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 16px;
+  }
+
+  .progress-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 0.06em;
+  }
+
+  .progress-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--gold);
+  }
+
+  .progress-track {
+    height: 8px;
+    background: var(--surface2);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+    border-radius: 4px;
+    transition: width 0.6s cubic-bezier(0.16,1,0.3,1);
+  }
+
+  .progress-milestones {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+  }
+
+  .milestone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    position: relative;
+  }
+
+  .milestone-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--border);
+    border: 2px solid var(--surface2);
+    transition: background 0.3s;
+  }
+
+  .milestone-dot.reached { background: var(--gold); }
+
+  .milestone-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--gray);
+  }
+
+  /* Referral list */
+  .referrals-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 28px;
+  }
+
+  .referral-list {
+    list-style: none;
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .referral-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 12px 16px;
+    animation: slideIn 0.3s ease;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .referral-name { font-size: 14px; font-weight: 500; }
+
+  .referral-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .referral-status {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 2px;
+    background: rgba(76,175,125,0.15);
+    color: var(--green);
+    border: 1px solid rgba(76,175,125,0.3);
+  }
+
+  .referral-pts-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--gold);
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 32px;
+    color: var(--gray);
+    font-size: 14px;
+    font-weight: 300;
+  }
+
+  /* Sidebar */
+  .sidebar {}
+
+  .points-card {
+    background: linear-gradient(135deg, #1a1500, #0a0a0a);
+    border: 1px solid var(--gold-dim);
+    border-radius: 4px;
+    padding: 28px;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+
+  .points-label {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    font-family: 'DM Mono', monospace;
+    margin-bottom: 8px;
+  }
+
+  .points-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 72px;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .points-sub {
+    font-size: 12px;
+    color: var(--gray);
+    font-weight: 300;
+  }
+
+  .drawing-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+
+  .drawing-card h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 0.06em;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+
+  .drawing-card p {
+    font-size: 12px;
+    color: var(--gray);
+    margin-bottom: 16px;
+    font-weight: 300;
+  }
+
+  .entries-count {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 14px;
+  }
+
+  .entries-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  .entries-text {
+    font-size: 12px;
+    color: var(--gray);
+    font-weight: 300;
+    line-height: 1.4;
+  }
+
+  .unlocked-card {
+    background: rgba(201,168,76,0.08);
+    border: 1px solid var(--gold-dim);
+    border-radius: 4px;
+    padding: 20px;
+  }
+
+  .unlocked-card h4 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    letter-spacing: 0.06em;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .unlocked-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 13px;
+  }
+
+  .unlocked-item:last-child { border-bottom: none; }
+
+  .check { color: var(--green); font-size: 14px; }
+  .lock { color: var(--gray); font-size: 14px; }
+
+  /* ── ADMIN PANEL ── */
+  .admin-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+
+  @media (max-width: 600px) { .admin-grid { grid-template-columns: 1fr; } }
+
+  .admin-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 28px;
+  }
+
+  .admin-card h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.06em;
+    margin-bottom: 16px;
+    color: var(--white);
+  }
+
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+
+  .stat-row:last-child { border-bottom: none; }
+  .stat-row span:first-child { color: var(--gray); }
+  .stat-row span:last-child { font-weight: 600; color: var(--white); font-family: 'DM Mono', monospace; }
+
+  .drawing-btn {
+    width: 100%;
+    padding: 16px;
+    background: transparent;
+    border: 1px solid var(--gold-dim);
+    color: var(--gold);
+    border-radius: 3px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 16px;
+  }
+
+  .drawing-btn:hover {
+    background: var(--gold);
+    color: #0a0a0a;
+  }
+
+  .leaderboard-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .leaderboard-item:last-child { border-bottom: none; }
+
+  .lb-rank {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--gray);
+    width: 20px;
+  }
+
+  .lb-rank.gold { color: var(--gold); }
+
+  .lb-name { flex: 1; font-size: 14px; }
+
+  .lb-refs {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--gold);
+  }
+
+  /* winner toast */
+  .toast {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    background: var(--surface);
+    border: 1px solid var(--gold);
+    border-radius: 4px;
+    padding: 20px 24px;
+    max-width: 320px;
+    transform: translateX(400px);
+    transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+    z-index: 1000;
+  }
+
+  .toast.show { transform: translateX(0); }
+
+  .toast-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.06em;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+
+  .toast-body { font-size: 14px; color: var(--gray); }
+
+  footer {
+    text-align: center;
+    padding: 48px 0 24px;
+    color: var(--border);
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.1em;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div class="header-inner">
+      <div>
+        <div class="logo-badge">
+          <div class="logo-dot"></div>
+          <span>Member Rewards Program</span>
+        </div>
+        <h1>REFER.<br><em>EARN.</em><br>WIN.</h1>
+      </div>
+      <p class="header-tagline">Every referral earns points, entries into our prize drawing, and gets your friends started right.</p>
+    </div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('overview')">Overview</button>
+    <button class="tab" onclick="switchTab('tracker')">My Referrals</button>
+    <button class="tab" onclick="switchTab('admin')">Admin</button>
+  </div>
+
+  <!-- OVERVIEW -->
+  <div id="panel-overview" class="panel active">
+    <div class="overview-hero">
+      <h2>How It Works</h2>
+      <p>Refer a friend, earn points, and unlock rewards — including your next dues waived and even a free year of membership. Every referral also gets you an entry into our monthly prize drawing.</p>
+    </div>
+
+    <div class="reward-grid">
+      <div class="reward-card">
+        <div class="reward-pts">1 <span>PT</span></div>
+        <div class="reward-label">Per Referral</div>
+        <div class="reward-desc">Earn 1 point for every friend you refer who joins. Points stack toward bigger rewards.</div>
+      </div>
+      <div class="reward-card highlight">
+        <div class="reward-badge">INSTANT</div>
+        <div class="reward-pts">1 <span>PT</span></div>
+        <div class="reward-label">Next Dues Waived</div>
+        <div class="reward-desc">Refer your first friend and your next billing cycle is on us. Your friend also gets their first dues waived.</div>
+      </div>
+      <div class="reward-card highlight">
+        <div class="reward-badge">TOP TIER</div>
+        <div class="reward-pts">5 <span>PTS</span></div>
+        <div class="reward-label">Free Year Membership</div>
+        <div class="reward-desc">Refer 5 friends and we'll cover an entire year of your membership. The ultimate reward.</div>
+      </div>
+    </div>
+
+    <div class="section-title">Monthly Prize Drawing</div>
+    <div class="section-sub">Each referral = 1 entry in the basket. More referrals, more chances to win.</div>
+
+    <div class="drawing-note">
+      <strong>How drawing entries work:</strong> For every friend you refer, your name is added to the drawing basket once. Refer 3 people? You're in 3 times. Winners are drawn monthly and prizes reset each cycle.
+    </div>
+
+    <div class="prize-list">
+      <div class="prize-item">
+        <div class="prize-icon">⚡</div>
+        <div>
+          <div class="prize-name">Evolt Scan</div>
+          <div class="prize-val">Body Composition</div>
+        </div>
+      </div>
+      <div class="prize-item">
+        <div class="prize-icon">🔄</div>
+        <div>
+          <div class="prize-name">Recovery Session</div>
+          <div class="prize-val">Full Session</div>
+        </div>
+      </div>
+      <div class="prize-item">
+        <div class="prize-icon">💪</div>
+        <div>
+          <div class="prize-name">Training Session</div>
+          <div class="prize-val">1-on-1 with a Coach</div>
+        </div>
+      </div>
+      <div class="prize-item">
+        <div class="prize-icon">🎁</div>
+        <div>
+          <div class="prize-name">Bonus Prize</div>
+          <div class="prize-val">Surprise Each Month</div>
+        </div>
+      </div>
+    </div>
+
+    <br><br>
+    <div class="drawing-note">
+      <strong>Your friend benefits too:</strong> When you refer someone, they get their first dues waived as a welcome gift — giving them the perfect head start.
+    </div>
+  </div>
+
+  <!-- TRACKER -->
+  <div id="panel-tracker" class="panel">
+    <div class="tracker-layout">
+      <div class="tracker-main">
+        <div class="member-card">
+          <label>Member Name</label>
+          <input class="member-input" id="memberName" type="text" placeholder="Your name" value="Alex Johnson">
+          <label>Referred Friend's Name</label>
+          <input class="member-input" id="referralName" type="text" placeholder="Friend's name">
+          <button class="add-referral-btn" onclick="addReferral()">+ Log Referral</button>
+        </div>
+
+        <div class="progress-section">
+          <div class="progress-header">
+            <span class="progress-label">Referral Progress</span>
+            <span class="progress-count" id="progressCount">0 / 5 for free year</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" id="progressFill" style="width:0%"></div>
+          </div>
+          <div class="progress-milestones">
+            <div class="milestone"><div class="milestone-dot" id="m1"></div><span class="milestone-num">1</span></div>
+            <div class="milestone"><div class="milestone-dot" id="m2"></div><span class="milestone-num">2</span></div>
+            <div class="milestone"><div class="milestone-dot" id="m3"></div><span class="milestone-num">3</span></div>
+            <div class="milestone"><div class="milestone-dot" id="m4"></div><span class="milestone-num">4</span></div>
+            <div class="milestone"><div class="milestone-dot" id="m5"></div><span class="milestone-num">5</span></div>
+          </div>
+        </div>
+
+        <div class="referrals-section">
+          <div class="section-title">Logged Referrals</div>
+          <ul class="referral-list" id="referralList">
+            <li class="empty-state" id="emptyState">No referrals logged yet. Add your first one above.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sidebar">
+        <div class="points-card">
+          <div class="points-label">Total Points</div>
+          <div class="points-number" id="pointsDisplay">0</div>
+          <div class="points-sub">1 point per referral</div>
+        </div>
+
+        <div class="drawing-card">
+          <h3>Drawing Entries</h3>
+          <p>Your name in the monthly basket</p>
+          <div class="entries-count">
+            <div class="entries-num" id="entriesDisplay">0</div>
+            <div class="entries-text">basket<br>entries</div>
+          </div>
+        </div>
+
+        <div class="unlocked-card">
+          <h4>Rewards Status</h4>
+          <div class="unlocked-item" id="reward1">
+            <span class="lock">○</span>
+            <span style="font-size:13px; color:var(--gray)">Next dues waived (1 ref)</span>
+          </div>
+          <div class="unlocked-item" id="reward2">
+            <span class="lock">○</span>
+            <span style="font-size:13px; color:var(--gray)">Friend's dues waived</span>
+          </div>
+          <div class="unlocked-item" id="reward5">
+            <span class="lock">○</span>
+            <span style="font-size:13px; color:var(--gray)">Free year membership (5 refs)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN -->
+  <div id="panel-admin" class="panel">
+    <div class="admin-grid">
+      <div class="admin-card">
+        <h3>Program Stats</h3>
+        <div class="stat-row"><span>Total Members Referred</span><span id="statTotal">0</span></div>
+        <div class="stat-row"><span>Drawing Entries Issued</span><span id="statEntries">0</span></div>
+        <div class="stat-row"><span>Dues Waivers Given</span><span id="statWaivers">0</span></div>
+        <div class="stat-row"><span>Free Years Earned</span><span id="statFreeYears">0</span></div>
+        <button class="drawing-btn" onclick="runDrawing()">🎲 Run Monthly Drawing</button>
+      </div>
+
+      <div class="admin-card">
+        <h3>Leaderboard</h3>
+        <div id="leaderboard">
+          <p style="color:var(--gray); font-size:13px; font-weight:300;">No referrals logged yet.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-card">
+      <h3>Prize Drawing Pool</h3>
+      <div id="drawingPool" style="color:var(--gray); font-size:13px; font-weight:300;">No entries in pool yet.</div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">
+  <div class="toast-title" id="toastTitle">🎉 WINNER!</div>
+  <div class="toast-body" id="toastBody"></div>
+</div>
+
+<footer>MEMBER REFERRAL REWARDS PROGRAM &nbsp;·&nbsp; CONFIDENTIAL</footer>
+
+<script>
+  // State
+  let state = {
+    referrals: [],         // { member, friend, date }
+    members: {}            // { name: count }
+  };
+
+  // Load from localStorage if available
+  try {
+    const saved = localStorage.getItem('referralProgram');
+    if (saved) state = JSON.parse(saved);
+  } catch(e) {}
+
+  function save() {
+    try { localStorage.setItem('referralProgram', JSON.stringify(state)); } catch(e) {}
+  }
+
+  function switchTab(tab) {
+    document.querySelectorAll('.tab').forEach((t,i) => {
+      t.classList.toggle('active', ['overview','tracker','admin'][i] === tab);
+    });
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('panel-' + tab).classList.add('active');
+    if (tab === 'tracker') updateTracker();
+    if (tab === 'admin') updateAdmin();
+  }
+
+  function addReferral() {
+    const member = document.getElementById('memberName').value.trim();
+    const friend = document.getElementById('referralName').value.trim();
+    if (!member || !friend) { alert('Please enter both names.'); return; }
+
+    state.referrals.push({ member, friend, date: new Date().toLocaleDateString() });
+    state.members[member] = (state.members[member] || 0) + 1;
+    document.getElementById('referralName').value = '';
+    save();
+    updateTracker();
+  }
+
+  function updateTracker() {
+    const memberName = document.getElementById('memberName').value.trim() || 'Alex Johnson';
+    const myRefs = state.referrals.filter(r => r.member.toLowerCase() === memberName.toLowerCase());
+    const count = myRefs.length;
+    const pts = count;
+
+    // Points & entries
+    document.getElementById('pointsDisplay').textContent = pts;
+    document.getElementById('entriesDisplay').textContent = count;
+    document.getElementById('progressCount').textContent = count + ' / 5 for free year';
+
+    // Progress bar
+    const pct = Math.min(count / 5 * 100, 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+
+    // Milestones
+    for (let i = 1; i <= 5; i++) {
+      const dot = document.getElementById('m' + i);
+      if (dot) dot.classList.toggle('reached', count >= i);
+    }
+
+    // Rewards
+    const r1 = document.getElementById('reward1');
+    const r2 = document.getElementById('reward2');
+    const r5 = document.getElementById('reward5');
+
+    if (count >= 1) {
+      r1.innerHTML = '<span class="check">✓</span><span style="font-size:13px; color:var(--white)">Next dues waived</span>';
+      r2.innerHTML = '<span class="check">✓</span><span style="font-size:13px; color:var(--white)">Friend\'s dues waived</span>';
+    } else {
+      r1.innerHTML = '<span class="lock">○</span><span style="font-size:13px; color:var(--gray)">Next dues waived (1 ref)</span>';
+      r2.innerHTML = '<span class="lock">○</span><span style="font-size:13px; color:var(--gray)">Friend\'s dues waived</span>';
+    }
+
+    if (count >= 5) {
+      r5.innerHTML = '<span class="check">✓</span><span style="font-size:13px; color:var(--gold)"><strong>FREE YEAR UNLOCKED!</strong></span>';
+    } else {
+      r5.innerHTML = '<span class="lock">○</span><span style="font-size:13px; color:var(--gray)">Free year membership (5 refs)</span>';
+    }
+
+    // List
+    const list = document.getElementById('referralList');
+    const empty = document.getElementById('emptyState');
+    if (myRefs.length === 0) {
+      list.innerHTML = '<li class="empty-state" id="emptyState">No referrals logged yet. Add your first one above.</li>';
+      return;
+    }
+
+    list.innerHTML = myRefs.map((r, i) => `
+      <li class="referral-item">
+        <span class="referral-name">${r.friend}</span>
+        <div class="referral-meta">
+          <span class="referral-pts-badge">+1 PT</span>
+          <span class="referral-status">Active</span>
+        </div>
+      </li>
+    `).join('');
+  }
+
+  function updateAdmin() {
+    const total = state.referrals.length;
+    const entries = total;
+    const waivers = Object.values(state.members).reduce((a,v) => a + Math.min(v,1), 0) * 2; // member + friend per first referral
+    const freeYears = Object.values(state.members).filter(v => v >= 5).length;
+
+    document.getElementById('statTotal').textContent = total;
+    document.getElementById('statEntries').textContent = entries;
+    document.getElementById('statWaivers').textContent = waivers;
+    document.getElementById('statFreeYears').textContent = freeYears;
+
+    // Leaderboard
+    const lb = document.getElementById('leaderboard');
+    const sorted = Object.entries(state.members).sort((a,b) => b[1]-a[1]).slice(0,5);
+    if (sorted.length === 0) {
+      lb.innerHTML = '<p style="color:var(--gray); font-size:13px; font-weight:300;">No referrals logged yet.</p>';
+    } else {
+      lb.innerHTML = sorted.map(([name, count], i) => `
+        <div class="leaderboard-item">
+          <span class="lb-rank ${i===0?'gold':''}">${i===0?'★':`#${i+1}`}</span>
+          <span class="lb-name">${name}</span>
+          <span class="lb-refs">${count} ref${count!==1?'s':''}</span>
+        </div>
+      `).join('');
+    }
+
+    // Drawing pool
+    const pool = document.getElementById('drawingPool');
+    if (state.referrals.length === 0) {
+      pool.innerHTML = '<p style="color:var(--gray); font-size:13px; font-weight:300;">No entries in pool yet.</p>';
+    } else {
+      // Build pool: each member gets 1 entry per referral
+      const poolEntries = {};
+      state.referrals.forEach(r => {
+        poolEntries[r.member] = (poolEntries[r.member] || 0) + 1;
+      });
+      pool.innerHTML = `<div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;">` +
+        Object.entries(poolEntries).map(([name, entries]) =>
+          `<div style="background:var(--surface2);border:1px solid var(--border);border-radius:3px;padding:8px 14px;font-size:13px;">
+            <span>${name}</span>
+            <span style="color:var(--gold);font-family:'DM Mono',monospace;margin-left:8px;">${entries}×</span>
+          </div>`
+        ).join('') + `</div>
+        <div style="margin-top:12px; font-size:12px; color:var(--gray);">Total pool entries: ${state.referrals.length}</div>`;
+    }
+  }
+
+  function runDrawing() {
+    if (state.referrals.length === 0) {
+      alert('No entries in the drawing pool yet!');
+      return;
+    }
+
+    // Build weighted pool
+    const pool = [];
+    state.referrals.forEach(r => pool.push(r.member));
+    const winner = pool[Math.floor(Math.random() * pool.length)];
+
+    const prizes = ['Evolt Body Scan', 'Full Recovery Session', '1-on-1 Training Session', 'Monthly Bonus Prize'];
+    const prize = prizes[Math.floor(Math.random() * prizes.length)];
+
+    showToast(`🎉 ${winner.toUpperCase()} WINS!`, `Prize: ${prize}`);
+  }
+
+  function showToast(title, body) {
+    document.getElementById('toastTitle').textContent = title;
+    document.getElementById('toastBody').textContent = body;
+    const t = document.getElementById('toast');
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 4500);
+  }
+
+  // Init
+  updateTracker();
+</script>
+</body>
+</html>
